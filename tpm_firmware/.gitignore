@@ -17,11 +17,5 @@
 .pdi
 .vitisWorkspace.json
 
-_ide/
-
-.rigel_lopper/
-
-tpm_platform
-
-*.jou
-*.log
+_ide/logs
+_ide/.wsdata

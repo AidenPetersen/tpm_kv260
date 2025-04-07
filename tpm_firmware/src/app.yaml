@@ -1,0 +1,4 @@
+domain_path: /home/aidenp/fpga/tpm/tpm_platform/export/tpm_platform/sw/psu_cortexa53_1
+app_src_dir: /home/aidenp/Xilinx/Vitis/2024.2/data/embeddedsw/lib/sw_apps/hello_world
+template: hello_world
+lang: c
