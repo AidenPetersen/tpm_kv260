@@ -12,50 +12,33 @@ proc create_ipi_design { offsetfile design_name } {
 	# Create instance: tpm_ip_0, and set properties
 	set tpm_ip_0 [ create_bd_cell -type ip -vlnv user.org:user:tpm_ip:1.0 tpm_ip_0]
 
-	# Create External ports
-	set TPM_TO_MAIN_INIT_AXI_TXN [ create_bd_port -dir I TPM_TO_MAIN_INIT_AXI_TXN ]
-	set TPM_TO_MAIN_ERROR [ create_bd_port -dir O TPM_TO_MAIN_ERROR ]
-	set TPM_TO_MAIN_TXN_DONE [ create_bd_port -dir O TPM_TO_MAIN_TXN_DONE ]
-
-	# Create instance: slave_0, and set properties
-	set slave_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vip slave_0]
-	set_property -dict [ list  CONFIG.PROTOCOL {AXI4LITE}  CONFIG.INTERFACE_MODE {SLAVE} ] $slave_0
-
-connect_bd_intf_net [get_bd_intf_pins slave_0/S_AXI ] [get_bd_intf_pins tpm_ip_0/TPM_TO_MAIN]
-	# Create port connections
-	connect_bd_net -net aclk_net [get_bd_ports ACLK] [get_bd_pins slave_0/ACLK] [get_bd_pins tpm_ip_0/TPM_TO_MAIN_ACLK]
-	connect_bd_net -net aresetn_net [get_bd_ports ARESETN] [get_bd_pins slave_0/ARESETN] [get_bd_pins tpm_ip_0/TPM_TO_MAIN_ARESETN]
-	connect_bd_net -net init_axi_txn_00 [get_bd_ports TPM_TO_MAIN_INIT_AXI_TXN] [get_bd_pins tpm_ip_0/TPM_TO_MAIN_INIT_AXI_TXN]
-	connect_bd_net -net error_00 [get_bd_ports TPM_TO_MAIN_ERROR] [get_bd_pins tpm_ip_0/TPM_TO_MAIN_ERROR]
-	connect_bd_net -net txn_done_00 [get_bd_ports TPM_TO_MAIN_TXN_DONE] [get_bd_pins tpm_ip_0/TPM_TO_MAIN_TXN_DONE]
-
 	# Create instance: master_0, and set properties
 	set master_0 [ create_bd_cell -type ip -vlnv  xilinx.com:ip:axi_vip master_0]
 	set_property -dict [ list CONFIG.PROTOCOL {AXI4LITE} CONFIG.INTERFACE_MODE {MASTER} ] $master_0
 
 	# Create interface connections
-	connect_bd_intf_net [get_bd_intf_pins master_0/M_AXI ] [get_bd_intf_pins tpm_ip_0/CPU_TO_TPM]
+	connect_bd_intf_net [get_bd_intf_pins master_0/M_AXI ] [get_bd_intf_pins tpm_ip_0/S00_AXI]
 
 	# Create port connections
-	connect_bd_net -net aclk_net [get_bd_ports ACLK] [get_bd_pins master_0/ACLK] [get_bd_pins tpm_ip_0/CPU_TO_TPM_ACLK]
-	connect_bd_net -net aresetn_net [get_bd_ports ARESETN] [get_bd_pins master_0/ARESETN] [get_bd_pins tpm_ip_0/CPU_TO_TPM_ARESETN]
+	connect_bd_net -net aclk_net [get_bd_ports ACLK] [get_bd_pins master_0/ACLK] [get_bd_pins tpm_ip_0/S00_AXI_ACLK]
+	connect_bd_net -net aresetn_net [get_bd_ports ARESETN] [get_bd_pins master_0/ARESETN] [get_bd_pins tpm_ip_0/S00_AXI_ARESETN]
 
 	# Create External ports
-	set TPM_TO_PRIV_INIT_AXI_TXN [ create_bd_port -dir I TPM_TO_PRIV_INIT_AXI_TXN ]
-	set TPM_TO_PRIV_ERROR [ create_bd_port -dir O TPM_TO_PRIV_ERROR ]
-	set TPM_TO_PRIV_TXN_DONE [ create_bd_port -dir O TPM_TO_PRIV_TXN_DONE ]
+	set M00_AXI_INIT_AXI_TXN [ create_bd_port -dir I M00_AXI_INIT_AXI_TXN ]
+	set M00_AXI_ERROR [ create_bd_port -dir O M00_AXI_ERROR ]
+	set M00_AXI_TXN_DONE [ create_bd_port -dir O M00_AXI_TXN_DONE ]
 
-	# Create instance: slave_1, and set properties
-	set slave_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vip slave_1]
-	set_property -dict [ list  CONFIG.PROTOCOL {AXI4LITE}  CONFIG.INTERFACE_MODE {SLAVE} ] $slave_1
+	# Create instance: slave_0, and set properties
+	set slave_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vip slave_0]
+	set_property -dict [ list  CONFIG.PROTOCOL {AXI4LITE}  CONFIG.INTERFACE_MODE {SLAVE} ] $slave_0
 
-connect_bd_intf_net [get_bd_intf_pins slave_1/S_AXI ] [get_bd_intf_pins tpm_ip_0/TPM_TO_PRIV]
+connect_bd_intf_net [get_bd_intf_pins slave_0/S_AXI ] [get_bd_intf_pins tpm_ip_0/M00_AXI]
 	# Create port connections
-	connect_bd_net -net aclk_net [get_bd_ports ACLK] [get_bd_pins slave_1/ACLK] [get_bd_pins tpm_ip_0/TPM_TO_PRIV_ACLK]
-	connect_bd_net -net aresetn_net [get_bd_ports ARESETN] [get_bd_pins slave_1/ARESETN] [get_bd_pins tpm_ip_0/TPM_TO_PRIV_ARESETN]
-	connect_bd_net -net init_axi_txn_11 [get_bd_ports TPM_TO_PRIV_INIT_AXI_TXN] [get_bd_pins tpm_ip_0/TPM_TO_PRIV_INIT_AXI_TXN]
-	connect_bd_net -net error_11 [get_bd_ports TPM_TO_PRIV_ERROR] [get_bd_pins tpm_ip_0/TPM_TO_PRIV_ERROR]
-	connect_bd_net -net txn_done_11 [get_bd_ports TPM_TO_PRIV_TXN_DONE] [get_bd_pins tpm_ip_0/TPM_TO_PRIV_TXN_DONE]
+	connect_bd_net -net aclk_net [get_bd_ports ACLK] [get_bd_pins slave_0/ACLK] [get_bd_pins tpm_ip_0/M00_AXI_ACLK]
+	connect_bd_net -net aresetn_net [get_bd_ports ARESETN] [get_bd_pins slave_0/ARESETN] [get_bd_pins tpm_ip_0/M00_AXI_ARESETN]
+	connect_bd_net -net init_axi_txn_00 [get_bd_ports M00_AXI_INIT_AXI_TXN] [get_bd_pins tpm_ip_0/M00_AXI_INIT_AXI_TXN]
+	connect_bd_net -net error_00 [get_bd_ports M00_AXI_ERROR] [get_bd_pins tpm_ip_0/M00_AXI_ERROR]
+	connect_bd_net -net txn_done_00 [get_bd_ports M00_AXI_TXN_DONE] [get_bd_pins tpm_ip_0/M00_AXI_TXN_DONE]
 set_property target_simulator XSim [current_project]
 set_property -name {xsim.simulate.runtime} -value {100ms} -objects [get_filesets sim_1]
 

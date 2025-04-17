@@ -4,7 +4,6 @@
 
 import axi_vip_pkg::*;
 import tpm_ip_bfm_1_slave_0_0_pkg::*;
-import tpm_ip_bfm_1_slave_1_0_pkg::*;
 import tpm_ip_bfm_1_master_0_0_pkg::*;
 
 module tpm_ip_tb();
@@ -43,10 +42,6 @@ tpm_ip_bfm_1_slave_0_0_slv_mem_t          slv_agent_0;
 bit error_0;
 bit done_0;
 bit init_0;
-tpm_ip_bfm_1_slave_1_0_slv_mem_t          slv_agent_1;
-bit error_1;
-bit done_1;
-bit init_1;
 integer result_slave;  
 bit [31:0] S00_AXI_test_data[3:0]; 
  localparam LC_AXI_BURST_LENGTH = 8; 
@@ -123,12 +118,9 @@ tpm_ip_bfm_1_master_0_0_mst_t          mst_agent_0;
 
   `BD_WRAPPER DUT(
       .ARESETN(reset), 
-.TPM_TO_MAIN_INIT_AXI_TXN(init_0),
-.TPM_TO_MAIN_TXN_DONE(done_0),
-.TPM_TO_MAIN_ERROR(error_0),
-.TPM_TO_PRIV_INIT_AXI_TXN(init_1),
-.TPM_TO_PRIV_TXN_DONE(done_1),
-.TPM_TO_PRIV_ERROR(error_1),
+.M00_AXI_INIT_AXI_TXN(init_0),
+.M00_AXI_TXN_DONE(done_0),
+.M00_AXI_ERROR(error_0),
       .ACLK(clock) 
     ); 
   
@@ -138,11 +130,6 @@ initial begin
     slv_agent_0.set_agent_tag("Slave VIP");
     slv_agent_0.set_verbosity(slv_agent_verbosity);
     slv_agent_0.start_slave();
-    slv_agent_1 = new("slave vip agent",DUT.`BD_INST_NAME.slave_1.inst.IF);
-    slv_agent_1.vif_proxy.set_dummy_drive_type(XIL_AXI_VIF_DRIVE_NONE);
-    slv_agent_1.set_agent_tag("Slave VIP");
-    slv_agent_1.set_verbosity(slv_agent_verbosity);
-    slv_agent_1.start_slave();
      mst_agent_0 = new("master vip agent",DUT.`BD_INST_NAME.master_0.inst.IF);//ms  
    mst_agent_0.vif_proxy.set_dummy_drive_type(XIL_AXI_VIF_DRIVE_NONE); 
    mst_agent_0.set_agent_tag("Master VIP"); 
@@ -165,23 +152,10 @@ initial begin
     init_0 =1'b1;
     #20ns;
     init_0 = 1'b0;
-    $display("EXAMPLE TEST TPM_TO_MAIN:");
+    $display("EXAMPLE TEST M00_AXI:");
       wait( done_0 == 1'b1);
-      $display("TPM_TO_MAIN: PTGEN_TEST_FINISHED!");
+      $display("M00_AXI: PTGEN_TEST_FINISHED!");
       if ( error_0 ) begin
-        $display("PTGEN_TEST: FAILED!");
-      end else begin
-        $display("PTGEN_TEST: PASSED!");
-      end
-    init_1 = 0;
-    #200ns;
-    init_1 =1'b1;
-    #20ns;
-    init_1 = 1'b0;
-    $display("EXAMPLE TEST TPM_TO_PRIV:");
-      wait( done_1 == 1'b1);
-      $display("TPM_TO_PRIV: PTGEN_TEST_FINISHED!");
-      if ( error_1 ) begin
         $display("PTGEN_TEST: FAILED!");
       end else begin
         $display("PTGEN_TEST: PASSED!");
@@ -193,14 +167,6 @@ initial begin
   #1;
     forever begin
       slv_agent_0.monitor.item_collected_port.get(slv_monitor_transaction);
-      slave_moniter_transaction_queue.push_back(slv_monitor_transaction);
-      slave_moniter_transaction_queue_size++;
-    end
-  end
-  initial begin
-  #1;
-    forever begin
-      slv_agent_1.monitor.item_collected_port.get(slv_monitor_transaction);
       slave_moniter_transaction_queue.push_back(slv_monitor_transaction);
       slave_moniter_transaction_queue_size++;
     end
@@ -257,7 +223,7 @@ begin
      $display("Sequential read transfers example similar to  AXI BFM READ_BURST method completes"); 
      $display("Sequential read transfers example similar to  AXI VIP READ_BURST method completes"); 
      $display("---------------------------------------------------------"); 
-     $display("EXAMPLE TEST CPU_TO_TPM: PTGEN_TEST_FINISHED!"); 
+     $display("EXAMPLE TEST S00_AXI: PTGEN_TEST_FINISHED!"); 
      if ( result_slave ) begin                    
        $display("PTGEN_TEST: PASSED!");                  
      end    else begin                                       

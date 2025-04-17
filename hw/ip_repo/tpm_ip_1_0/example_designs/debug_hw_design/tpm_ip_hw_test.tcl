@@ -18,21 +18,21 @@ if { [llength [get_hw_axi_txns -quiet]] } {
 # Test all lite slaves.
 set wdata_1 abcd1234
 
-# Test: CPU_TO_TPM
-# Create a write transaction at cpu_to_tpm_addr address
-create_hw_axi_txn w_cpu_to_tpm_addr [get_hw_axis $jtag_axi_master] -type write -address $cpu_to_tpm_addr -data $wdata_1
-# Create a read transaction at cpu_to_tpm_addr address
-create_hw_axi_txn r_cpu_to_tpm_addr [get_hw_axis $jtag_axi_master] -type read -address $cpu_to_tpm_addr
+# Test: S00_AXI
+# Create a write transaction at s00_axi_addr address
+create_hw_axi_txn w_s00_axi_addr [get_hw_axis $jtag_axi_master] -type write -address $s00_axi_addr -data $wdata_1
+# Create a read transaction at s00_axi_addr address
+create_hw_axi_txn r_s00_axi_addr [get_hw_axis $jtag_axi_master] -type read -address $s00_axi_addr
 # Initiate transactions
-run_hw_axi r_cpu_to_tpm_addr
-run_hw_axi w_cpu_to_tpm_addr
-run_hw_axi r_cpu_to_tpm_addr
-set rdata_tmp [get_property DATA [get_hw_axi_txn r_cpu_to_tpm_addr]]
+run_hw_axi r_s00_axi_addr
+run_hw_axi w_s00_axi_addr
+run_hw_axi r_s00_axi_addr
+set rdata_tmp [get_property DATA [get_hw_axi_txn r_s00_axi_addr]]
 # Compare read data
 if { $rdata_tmp == $wdata_1 } {
-	puts "Data comparison test pass for - CPU_TO_TPM"
+	puts "Data comparison test pass for - S00_AXI"
 } else {
-	puts "Data comparison test fail for - CPU_TO_TPM, expected-$wdata_1 actual-$rdata_tmp"
+	puts "Data comparison test fail for - S00_AXI, expected-$wdata_1 actual-$rdata_tmp"
 	inc ec
 }
 
@@ -82,39 +82,21 @@ proc get_init_data { position } {
 	return $hexdata
 }
 
-# Test: TPM_TO_MAIN
-set wdata_tpm_to_main [get_init_data 0]
-create_hw_axi_txn w_tpm_to_main_addr [get_hw_axis $jtag_axi_master] -type write -address $axi_gpio_out_addr -data ${wdata_tpm_to_main}
-create_hw_axi_txn r_tpm_to_main_addr [get_hw_axis $jtag_axi_master] -type read -address $axi_gpio_in_addr 
+# Test: M00_AXI
+set wdata_m00_axi [get_init_data 0]
+create_hw_axi_txn w_m00_axi_addr [get_hw_axis $jtag_axi_master] -type write -address $axi_gpio_out_addr -data ${wdata_m00_axi}
+create_hw_axi_txn r_m00_axi_addr [get_hw_axis $jtag_axi_master] -type read -address $axi_gpio_in_addr 
 # Initiate transactions
-run_hw_axi r_tpm_to_main_addr
-run_hw_axi w_tpm_to_main_addr
-run_hw_axi r_tpm_to_main_addr
-set rdata_tmp [get_property DATA [get_hw_axi_txn r_tpm_to_main_addr]]
-set DE [ get_done_and_error_bit $rdata_tmp 2 0 ]
+run_hw_axi r_m00_axi_addr
+run_hw_axi w_m00_axi_addr
+run_hw_axi r_m00_axi_addr
+set rdata_tmp [get_property DATA [get_hw_axi_txn r_m00_axi_addr]]
+set DE [ get_done_and_error_bit $rdata_tmp 1 0 ]
 # Compare read data
 if { $DE == 01 } {
-	puts "Data comparison test pass for - TPM_TO_MAIN"
+	puts "Data comparison test pass for - M00_AXI"
 } else {
-	puts "Data comparison test fail for - TPM_TO_MAIN, rdata-$rdata_tmp expected-01 actual-$DE"
-	inc ec
-}
-
-# Test: TPM_TO_PRIV
-set wdata_tpm_to_priv [get_init_data 1]
-create_hw_axi_txn w_tpm_to_priv_addr [get_hw_axis $jtag_axi_master] -type write -address $axi_gpio_out_addr -data ${wdata_tpm_to_priv}
-create_hw_axi_txn r_tpm_to_priv_addr [get_hw_axis $jtag_axi_master] -type read -address $axi_gpio_in_addr 
-# Initiate transactions
-run_hw_axi r_tpm_to_priv_addr
-run_hw_axi w_tpm_to_priv_addr
-run_hw_axi r_tpm_to_priv_addr
-set rdata_tmp [get_property DATA [get_hw_axi_txn r_tpm_to_priv_addr]]
-set DE [ get_done_and_error_bit $rdata_tmp 2 1 ]
-# Compare read data
-if { $DE == 01 } {
-	puts "Data comparison test pass for - TPM_TO_PRIV"
-} else {
-	puts "Data comparison test fail for - TPM_TO_PRIV, rdata-$rdata_tmp expected-01 actual-$DE"
+	puts "Data comparison test fail for - M00_AXI, rdata-$rdata_tmp expected-01 actual-$DE"
 	inc ec
 }
 

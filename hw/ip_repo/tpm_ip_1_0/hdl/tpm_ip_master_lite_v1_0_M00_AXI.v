@@ -1,7 +1,7 @@
 
 `timescale 1 ns / 1 ps
 
-	module tpm_ip_master_lite_v1_0_TPM_TO_PRIV #
+	module tpm_ip_master_lite_v1_0_M00_AXI #
 	(
 		// Users to add parameters here
 
@@ -27,7 +27,7 @@
 		// Users to add ports here
 
 		// User ports ends
-		// Do not modify the ports beyond this line
+		// Do not modify the ports beyond this l/home/aidenp/fpga/tpm/hw/tpm_hw/tpm_hw.tmp/tpm_ip_v1_0_project/tpm_ip_v1_0_project.sim/sim_1/behav/xsim/xvlog.logine
 
 		// Initiate AXI transactions
 		input wire  INIT_AXI_TXN,
@@ -43,7 +43,7 @@
 		output wire [C_M_AXI_ADDR_WIDTH-1 : 0] M_AXI_AWADDR,
 		// Write channel Protection type.
     // This signal indicates the privilege and security level of the transaction,
-    // and whether the transaction is a data access or an instruction access.
+    // and whether the transaction is a data acces/home/aidenp/fpga/tpm/hw/tpm_hw/tpm_hw.tmp/tpm_ip_v1_0_project/tpm_ip_v1_0_project.sim/sim_1/behav/xsim/xvlog.logs or an instruction access.
 		output wire [2 : 0] M_AXI_AWPROT,
 		// Write address valid. 
     // This signal indicates that the master signaling valid write address and control information.

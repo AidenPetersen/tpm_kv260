@@ -3,7 +3,7 @@
 module rng
 #(
 parameter BYTES = 8,
-parameter STREAM_BYTES = 8
+parameter STREAM_BITS = 8
 )
 (
     input logic clk,
@@ -15,7 +15,7 @@ parameter STREAM_BYTES = 8
 );
     logic [$clog2(BYTES):0]counter;
     logic stream_enable;
-    logic [STREAM_BYTES - 1:0]stream_out;
+    logic [STREAM_BITS - 1:0]stream_out;
     
     assign stream_enable = start || (counter < BYTES);
     
@@ -34,13 +34,14 @@ parameter STREAM_BYTES = 8
         end
         else begin
             // being running, wait a cycle to grab from stream
-            if(counter == 0 && start) begin
+            if(counter == 0) begin
                 valid <= 0;
-                counter <= 1;
+                if(start)
+                    counter <= 1;
             end
             else if (counter > 0 && counter <= BYTES) begin
                 counter <= counter + 1;
-                result[BYTES * counter - 1 -: BYTES] <= stream_out;
+                result[STREAM_BITS * counter - 1 -: STREAM_BITS] <= stream_out;
             end 
             else if (counter == BYTES + 1) begin
                 counter <= 0;
