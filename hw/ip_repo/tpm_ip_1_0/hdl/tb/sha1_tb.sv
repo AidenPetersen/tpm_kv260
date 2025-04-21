@@ -174,6 +174,13 @@ module tb_sha1 ();
             wait_ready();
             db_digest1 = tb_digest;
             $display("*** TC %0d first block done.", tc_number);
+            #(CLK_PERIOD)
+            #(CLK_PERIOD)
+            #(CLK_PERIOD)
+            #(CLK_PERIOD)
+            #(CLK_PERIOD)
+            #(CLK_PERIOD)
+            #(CLK_PERIOD)
 
             $display("*** TC %0d second block started.", tc_number);
             tb_block = block2;

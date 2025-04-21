@@ -1591,5 +1591,8 @@
 	assign slv_reg70 = ret_arg5;
 	assign slv_reg71 = ret_arg6;
 	assign slv_reg72 = ret_arg7;
+	
+	// debug reg
+	assign slv_reg73 = 32'hDEADBEEF;
 	// User logic ends
 	endmodule

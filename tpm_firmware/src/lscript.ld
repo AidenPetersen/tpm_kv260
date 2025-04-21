@@ -12,12 +12,13 @@ _EL2_STACK_SIZE = DEFINED(_EL2_STACK_SIZE) ? _EL2_STACK_SIZE : 1024;
 
 MEMORY
 {
-	psu_ddr_1 : ORIGIN = 0x800000000, LENGTH = 0x80000000
+	psu_ddr_1 : ORIGIN = 0x800000000, LENGTH = 0x400000
 	psu_ddr_0 : ORIGIN = 0x100000, LENGTH = 0x400000
 	psu_qspi_linear_0 : ORIGIN = 0xc0000000, LENGTH = 0x20000000
 	psu_ocm_0 : ORIGIN = 0xfffc0000, LENGTH = 0x40000
-	axi_bram_0 : ORIGIN = 0xa0000000, LENGTH = 0x2000
-}
+	axi_tpm_regs : ORIGIN = 0xa0000000, LENGTH = 0x2000
+	new_memory_0 : ORIGIN = 0xa0002000, LENGTH = 0x2000
+ }
 
 /* Specify the default entry point to the program */
 
