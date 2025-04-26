@@ -16,14 +16,14 @@ module aes_subbytes #(
     output wire logic       valid_out
 );
 
-    typedef enum logic {
+    typedef enum {
         STATE_IDLE,
         STATE_RUNNING,
         STATE_DONE
     } state_t;
 
     state_t state;
-    wire state_t next_state;
+    state_t next_state;
 
     // Need an entry for every possible byte value
     wire [7 : 0] sbox[256];
@@ -32,7 +32,7 @@ module aes_subbytes #(
 
     logic [1:0] current_word_coords[2];
 
-    wire [1:0] next_word_coords[2];
+    logic [1:0] next_word_coords[2];
 
     wire [7:0] current_byte;
 
@@ -50,7 +50,7 @@ module aes_subbytes #(
         end
     endgenerate
 
-    always_ff @(posedge clock) begin : register_update
+    always_ff @(posedge clk) begin : register_update
         if (reset) begin
             for (int i = 0; i < STATE_ARRAY_DIMENSION; i++) begin
                 for (int j = 0; j < STATE_ARRAY_DIMENSION; j++) begin
