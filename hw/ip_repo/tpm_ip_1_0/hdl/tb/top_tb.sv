@@ -152,12 +152,22 @@ module top_tb;
     // Wait a few cycles
     repeat (4) @(posedge s00_axi_aclk);
 
-    // Write to internal register
+    // Write to internal register (to perform rng)
     axi_slave_write(9'h00, 32'h00000001);
     axi_slave_read(9'h00);
     #100
     axi_slave_read(9'h100);
     axi_slave_read(9'h104);
+    #200
+    // Start
+    axi_slave_write(9'h04, 32'hFFFFFFFF);
+    axi_slave_write(9'h08, 32'hBBBBBBBB);
+    // start sha load
+    axi_slave_write(9'h00, 32'h00000003);
+    axi_slave_write(9'h00, 32'h00000005);
+    
+    axi_slave_write(9'h00, 32'h00000007);
+    #8000
 
 //    // Trigger DUT master interface
 //    @(posedge m00_axi_aclk);

@@ -31,6 +31,7 @@ set(USER_COMPILE_SOURCES
 "main.c"
 "platform.c"
 "rsa.c"
+"ops.c"
 )
 
 # -----------------------------------------

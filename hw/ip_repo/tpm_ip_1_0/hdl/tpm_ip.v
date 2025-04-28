@@ -179,7 +179,7 @@ module tpm_ip #(
 	// Add user logic here
 	tpm_control tpm_control_inst(
 		.clk(s00_axi_aclk),
-		.resetn(!s00_axi_aresetn),
+		.resetn(s00_axi_aresetn),
 
 		.in_status(op_status_code),
 		.in_arg0(op_arg0),
